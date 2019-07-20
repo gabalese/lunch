@@ -1,4 +1,3 @@
-import dataclasses
 import re
 from contextlib import contextmanager
 from typing import Optional, Tuple
@@ -134,7 +133,8 @@ def complete_venue_with_reviews(venue: Venue) -> Venue:
     Given a venue with no reviews, attach some reviews to it
     """
     review = get_reviews_for_venue(venue.name, venue.city)
-    return dataclasses.replace(venue, reviews=review)
+    venue.reviews = review
+    return venue
 
 
 def search(venue: Venue) -> Venue:

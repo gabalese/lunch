@@ -3,7 +3,7 @@ from typing import List
 from foursquare import Foursquare
 
 from common.primitives import Venue, Point
-from config import FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET
+from venues.config import FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET
 
 __all__ = [
     'search'
@@ -19,7 +19,7 @@ class LunchClient:
     def __init__(self, client_id: str, client_secret: str):
         self.fq = Foursquare(client_id=client_id, client_secret=client_secret)
 
-    def search(self, lat: float, long: float, rad:int=2000, limit:int=50) -> List[Venue]:
+    def search(self, lat: float, long: float, rad: int = 2000, limit: int = 50) -> List[Venue]:
         """
         Search FQ's api
 
@@ -49,7 +49,10 @@ class LunchClient:
                   address=", ".join(venue['location']['formattedAddress']),
                   city=", ".join(venue['location']['formattedAddress'][1:]),
                   category=venue['categories'][0]['name'],
-                  coordinates=Point(venue['location']['lat'], venue['location']['lng']))
+                  coordinates=Point(
+                      lat=venue['location']['lat'],
+                      lon=venue['location']['lng']
+                  ))
             for venue in ordered_venues
         ]
 
@@ -57,7 +60,7 @@ class LunchClient:
 client = LunchClient(FOURSQUARE_CLIENT_ID, FOURSQUARE_CLIENT_SECRET)
 
 
-def search(lat: float, long: float, rad:int=2000, limit:int=50) -> List[Venue]:
+def search(lat: float, long: float, rad: int = 2000, limit: int = 50) -> List[Venue]:
     """
     Search FQ's API using the supplied client wrapper
     """

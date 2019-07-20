@@ -15,7 +15,7 @@ def venue():
         address='Not important',
         city='Rome, Italy',
         category='Pub',
-        coordinates=Point(0, 0),
+        coordinates=Point(lat=0, lon=0),
         reviews=None
     )
 
@@ -24,7 +24,7 @@ def test_api_gets_venues():
     places = venues.search(41.8532354, 12.5662685, limit=10, rad=1000)
 
     assert places
-    assert places[0].name == 'Meo Pinelli'
+    assert places[0].name == 'Alice pizza'
 
 
 def test_get_reviews(venue):
@@ -36,4 +36,4 @@ def test_get_reviews(venue):
 
     assert venue_with_review.reviews.url
     assert venue_with_review.reviews.rating
-    assert venue_with_review.reviews.reviews
+    assert venue_with_review.reviews.reviews != 0

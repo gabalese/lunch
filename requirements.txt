@@ -6,4 +6,8 @@ MarkupSafe==1.1.1
 virtualenv==16.6.1
 Werkzeug==0.15.4
 foursquare
-python-dotenv
+psycopg2
+geoalchemy2
+fastapi
+pydantic
+alembic
