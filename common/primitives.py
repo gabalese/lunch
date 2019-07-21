@@ -1,10 +1,9 @@
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Point:
+class Point(BaseModel):
     lat: float
     lon: float
 
@@ -13,23 +12,21 @@ class Point:
         return f'SRID=4326;POINT({self.lon} {self.lat})'
 
 
-@dataclass
-class GeoID:
+
+class GeoID(BaseModel):
     id: int
     city: str
     county: str
     country: str
 
 
-@dataclass
-class Review:
+class Review(BaseModel):
     url: str
     rating: float
     reviews: int
 
 
-@dataclass
-class Venue:
+class Venue(BaseModel):
     foursquare_id: str
     name: str
     address: str
@@ -37,3 +34,15 @@ class Venue:
     category: str
     coordinates: Point
     reviews: Optional[Review] = None
+
+    def dict(self, **kwargs):
+        return {
+            'foursquare_id': self.foursquare_id,
+            'name': self.name,
+            'address': self.address,
+            'city': self.city,
+            'category': self.category,
+            'coordinates': self.coordinates,
+            'reviews': self.reviews
+        }
+

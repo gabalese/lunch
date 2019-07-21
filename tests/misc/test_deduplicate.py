@@ -15,6 +15,7 @@ def test_deduplicate():
               coordinates=Point(12.4416217, 41.965139), category='Pub'),
     ]
 
-    no_duplicates = remove_duplicates_by_key(list_of_venues, 'foursquare_id')
+    no_duplicates, duplicates = remove_duplicates_by_key(list_of_venues, 'foursquare_id')
     assert len(no_duplicates) == 4
+    assert len(duplicates) == 1
 

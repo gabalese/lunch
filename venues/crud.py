@@ -1,6 +1,8 @@
+import logging
 from typing import List
 
 from geoalchemy2 import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from common.primitives import Venue, Point
@@ -23,14 +25,20 @@ def get_db_venues_around(db: Session, point: Point, radius: int, limit: int) -> 
 
 
 def get_venues_around(db: Session, point: Point, radius: int, limit: int) -> List[Venue]:
+    logging.info('Getting venues...')
     venues = get_db_venues_around(db, point, radius, limit)
     if len(venues) < 5:
+        logging.info(f'Got {len(venues)} venues')
+        logging.info('Getting more venues from FQ...')
         additional_venues = find.search(point.lat, point.lon, rad=radius, limit=limit - len(venues))
-        venues = utils.remove_duplicates_by_key(venues + additional_venues, 'foursquare_id')
+        venues, duplicates = utils.remove_duplicates_by_key(venues + additional_venues, 'foursquare_id')
+        if additional_venues:
+            logging.info(f'Saving {len(additional_venues)} more venues...')
+            save_venues(db, [models.Venue(**venue.dict()) for venue in additional_venues])
     return sorted(venues, key=lambda x: utils.distance_between_points(x.coordinates, point))
 
 
-def save_venue(db: Session, venue: Venue):
+def save_venue(db: Session, venue: Venue) -> Venue:
     model = models.Venue(
         foursquare_id=venue.foursquare_id,
         name=venue.name,
@@ -43,3 +51,15 @@ def save_venue(db: Session, venue: Venue):
     db.add(model)
     db.commit()
     return model.to_dataclass()
+
+
+def save_venues(db: Session, venues: List[Venue]):
+    """
+    All of this because I don't know how to do a proper ON CONFLICT DO NULL
+    when using a session and the ORM...
+    """
+    for venue in venues:
+        try:
+            save_venue(db, venue)
+        except IntegrityError:
+            db.rollback()

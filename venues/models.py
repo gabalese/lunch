@@ -22,7 +22,7 @@ class Venue(Base):
 
     def to_dataclass(self) -> VenueSchema:
         coordinates = wkb.loads(bytes(self.coordinates.data))
-        point = Point(coordinates.x, coordinates.y)
+        point = Point(lat=coordinates.x, lon=coordinates.y)
         return VenueSchema(
             foursquare_id=self.foursquare_id,
             name=self.name,

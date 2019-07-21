@@ -31,7 +31,7 @@ def get_db(request: Request):
 
 @app.get('/venues')
 async def list_venues(lat: float, lon: float, radius: int = 1000, limit: int = 10, db: Session = Depends(get_db)):
-    return crud.get_venues_around(db, Point(lat, lon), radius, limit)
+    return crud.get_venues_around(db, Point(lat=lat, lon=lon), radius, limit)
 
 
 @app.get('/venue/{foursquare_id}')
