@@ -30,10 +30,9 @@ def test_api_gets_venues():
 def test_get_reviews(venue):
     with mock.patch('reviews.find.get_venue_page_url') as mock_find_venue:
         mock_find_venue.return_value = 'https://www.tripadvisor.co.uk/Restaurant_Review-g186363-d786796-Reviews-L_Ortolan-Reading_Berkshire_England.html'
-        venue_with_review = reviews.search(venue)
+        review = reviews.search(venue)
 
-    assert venue_with_review.reviews
+    assert review.reviews
 
-    assert venue_with_review.reviews.url
-    assert venue_with_review.reviews.rating
-    assert venue_with_review.reviews.reviews != 0
+    assert review.rating
+    assert review.reviews != 0

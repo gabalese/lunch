@@ -32,7 +32,7 @@ def upgrade():
     sa.Column('address', sa.String(), nullable=True),
     sa.Column('city', sa.String(), nullable=True),
     sa.Column('category', sa.String(), nullable=True),
-    sa.Column('coordinates', geoalchemy2.types.Geometry(geometry_type='POINT', srid=4326), nullable=True),
+    sa.Column('coordinates', geoalchemy2.types.Geography(geometry_type='POINT', srid=4326), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

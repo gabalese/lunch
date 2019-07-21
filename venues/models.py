@@ -1,4 +1,4 @@
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geography
 from shapely import wkb
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
@@ -11,14 +11,14 @@ class Venue(Base):
     __tablename__ = 'venues'
 
     id = Column(Integer, primary_key=True)
-    foursquare_id = Column(String)
+    foursquare_id = Column(String, unique=True)
     name = Column(String)
     address = Column(String)
     city = Column(String)
     category = Column(String)
-    coordinates = Column(Geometry(geometry_type='POINT', srid=4326))
+    coordinates = Column(Geography(geometry_type='POINT', srid=4326))
 
-    reviews = relationship('Reviews', back_populates='venue')
+    reviews = relationship('Reviews', back_populates='venue', uselist=False)
 
     def to_dataclass(self) -> VenueSchema:
         coordinates = wkb.loads(bytes(self.coordinates.data))
@@ -30,7 +30,7 @@ class Venue(Base):
             city=self.city,
             category=self.category,
             coordinates=point,
-            reviews=self.reviews.to_dataclass()
+            reviews=self.reviews.to_dataclass() if self.reviews else None
         )
 
 

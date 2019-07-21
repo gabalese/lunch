@@ -8,6 +8,10 @@ class Point:
     lat: float
     lon: float
 
+    @property
+    def to_4326_wkt(self):
+        return f'SRID=4326;POINT({self.lon} {self.lat})'
+
 
 @dataclass
 class GeoID:

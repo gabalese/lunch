@@ -137,8 +137,8 @@ def complete_venue_with_reviews(venue: Venue) -> Venue:
     return venue
 
 
-def search(venue: Venue) -> Venue:
+def search(venue: Venue) -> Review:
     """
     Shorthand method for consistency with other modules
     """
-    return complete_venue_with_reviews(venue)
+    return get_reviews_for_venue(venue.name, venue.city)
